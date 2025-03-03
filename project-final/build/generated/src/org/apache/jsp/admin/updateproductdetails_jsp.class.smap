@@ -1,0 +1,34 @@
+SMAP
+updateproductdetails_jsp.java
+JSP
+*S JSP
+*F
++ 0 updateproductdetails.jsp
+admin/updateproductdetails.jsp
++ 1 sidebar.jsp
+admin/sidebar.jsp
++ 2 topbar.jsp
+admin/topbar.jsp
+*L
+1:54
+3,2:56
+4,27:58
+31:85,3
+32,9:88
+1#1,49:97
+40#0,11:146
+1#2,201:157
+50#0,49:358
+99,11:408
+109,2:419
+111,10:421,3
+121,3:451
+124,5:455
+128,2:460
+130,4:462,3
+134,2:474
+136,4:476,3
+140,2:488
+142,4:491
+145,74:495
+*E

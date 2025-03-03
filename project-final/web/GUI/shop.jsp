@@ -228,9 +228,7 @@
                         System.out.println(
                                 "value = " + value);
 
-                        if (value
-                                == null || value.equals(
-                                        "null")) {
+                        if (value == null || value.equals("null")) {
                             indexTrang = 1;
                         } else {
                             indexTrang = Integer.parseInt(request.getParameter("value"));
@@ -265,9 +263,9 @@
                                 <input type="hidden" name="hanhdong" value="addtocart">
 
                                 <input type="hidden" name="masanpham" value="<%=sanPham.getMasanpham()%>">
-          
-<!--                                insert into giohang(makhachhang, masanpham, size, soluong)
-                                values ('1','THT-001','',1)-->
+
+                                <!--                                insert into giohang(makhachhang, masanpham, size, soluong)
+                                                                values ('1','THT-001','',1)-->
 
                                 <div class="text-center">
                                     <button class="img-name ">
@@ -299,7 +297,7 @@
                         <ul class="pagination">
                             <li class="page-item"><a class="page-link" href="">Previous</a></li>
                                 <%
-                                                     if (soLuongPage                                       > 0) {
+                                    if (soLuongPage > 0) {
                                         for (int i = 1; i < soLuongPage; i++) {
 
                                 %>   

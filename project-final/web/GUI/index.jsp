@@ -1,3 +1,5 @@
+<%@page import="model.MaGiamGia"%>
+<%@page import="database.MaGiamGiaDAO"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="model.SanPham"%>
 <%@page import="java.util.List"%>
@@ -85,14 +87,14 @@
             <!-- end slider section -->
 
 
-            
+
             <!-- shop section -->
 
             <section class="shop_section layout_padding">
                 <div class="container">
                     <div class="heading_container heading_center">
                         <h2>
-                            News arrivals
+                            <a href="<%= url1 %>/admin/category.jsp">News arrivals</a>
                         </h2>
                     </div>
                     <div class="row">
@@ -152,23 +154,42 @@
             <!-- end shop section -->
 
             <!-- gift section -->
-            <section class="gift_section layout_padding-bottom">
-                <h1 style="text-align: center">Voucher for you</h1>
-                <div card-container>
-                    <div class="card-item ">
-                        <img class="card-img" alt="anh voucher" src="<%=url1%>/GUI/imgvoucher/voucher.png">
-                        <div class="card-body">
-                            <p style="font-size: 24px;font-weight: 500 " class="card-title">Giảm 25% cho đơn hàng từ 100k</p>
-                            <p class="card-text"> <h5>EXP: <small class="text-muted">15-02-2025</small></h5> </p>
+            <%--<%@include file="../GUI/voucherLink.jsp" %>--%>
+
+            <div class="row">
+
+                <%
+                    MaGiamGiaDAO maGiamGiaDAO = new MaGiamGiaDAO();
+                    List<MaGiamGia> listMaGiamGia = maGiamGiaDAO.selectAll();
+
+                    if (listMaGiamGia != null && !listMaGiamGia.isEmpty()) {
+                        for (MaGiamGia maGiamGia : listMaGiamGia) {
+                %>   
+               <!-- <div  class="col-1"> </div> -->
+                <div  class="col-3 row">
+                    <div class="card-item">
+                        <img class="card-img row " alt="anh voucher" src="<%=url1%>/GUI/imgvoucher/<%=maGiamGia.getHinhanhvoucher()%>">
+                        <div class="card-body row">
+                            <p style="font-size: 24px;font-weight: 500 " class="card-title"><%=maGiamGia.getTenMaGiamGia()%></p>
+                            <p class="card-text"> <h5>EXP: <small class="text-muted"><%=maGiamGia.getNgayHetHan()%></small></h5> </p>
                         </div>
-                        <form class="card-getvalue" action="chuaCoHanhDong">
-                            <button class="btn btn-primary getValue">Get</button>
-                        </form>
+                        
                     </div>
-
+<form class="card-getvalue" action="#" method="post">
+                            <!--<button class="btn btn-primary getValue">Get</button>-->
+                            <input class="btn btn-primary" value="Get" >
+                        </form>
                 </div>
-            </section>
 
+                <!--<div  class="col-2"></div>-->
+                <%
+                        }
+                    }
+                %>              
+
+
+
+            </div>
 
             <!-- end gift section -->
 

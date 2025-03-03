@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class SanPham  implements Serializable{
+public class SanPham implements Serializable {
 
     private String masanpham;
     private String tensanpham;
@@ -20,7 +20,13 @@ public class SanPham  implements Serializable{
     public SanPham() {
     }
 
-    // Constructor đầy đủ tham số
+    public SanPham(String masanpham, String size, int soluong){
+        this.masanpham = masanpham;
+        this.kichco = size;
+        this.soluong = soluong;
+    }
+
+
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
             String mausac, String kichco, Integer soluong, String kieumau,
             Double gianhap, Double giaban, Integer giamgia, String mota) {
@@ -36,8 +42,7 @@ public class SanPham  implements Serializable{
         this.giamgia = giamgia;
         this.mota = mota;
     }
-    
-    
+
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
             String mausac, String kieumau,
             Double gianhap, Double giaban, Integer giamgia, String mota) {
@@ -51,7 +56,7 @@ public class SanPham  implements Serializable{
         this.giamgia = giamgia;
         this.mota = mota;
     }
-    
+
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
             String mausac, String kieumau,
             Double giaban, Integer giamgia) {
@@ -63,10 +68,8 @@ public class SanPham  implements Serializable{
 
         this.giaban = giaban;
         this.giamgia = giamgia;
-   
+
     }
-    
-    
 
     // Getter & Setter
     public String getMasanpham() {
@@ -161,6 +164,5 @@ public class SanPham  implements Serializable{
     public String toString() {
         return "SanPham{" + "masanpham=" + masanpham + ", tensanpham=" + tensanpham + ", hinhanhsanpham=" + hinhanhsanpham + ", mausac=" + mausac + ", kichco=" + kichco + ", soluong=" + soluong + ", kieumau=" + kieumau + ", gianhap=" + gianhap + ", giaban=" + giaban + ", giamgia=" + giamgia + ", mota=" + mota + '}';
     }
-    
-    
+
 }
