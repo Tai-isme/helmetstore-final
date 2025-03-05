@@ -135,7 +135,7 @@ public class KhachHangController extends HttpServlet {
     private void login(HttpServletRequest request, HttpServletResponse response) {
         String error = "";
 
-        String url = "fdf";
+        String url = "";
         try {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
@@ -161,12 +161,15 @@ public class KhachHangController extends HttpServlet {
                 KhachHang khachHang = new KhachHang(username, password);
                 KhachHangDAO khachHangDAO = new KhachHangDAO();
                 khachHang = khachHangDAO.selectByUsernameAndPassword(khachHang);
-
                 // Kiểm tra kh được lấy lên từ CSDL có đúng hay không
+                HttpSession session = request.getSession();
                 if (khachHang != null) {
-                    HttpSession session = request.getSession();
+                    if (khachHang.getIsAdmin() == 1) {
+                        url = "/admin/index.jsp";
+                    } else {
+                        url = "/GUI/index.jsp";
+                    }
                     session.setAttribute("khachHang", khachHang);
-                    url = "/GUI/index.jsp";
                 } else {
                     url = "/khachhang/login.jsp";
                 }

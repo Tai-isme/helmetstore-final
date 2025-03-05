@@ -9,11 +9,11 @@ public class SanPham implements Serializable {
     private String hinhanhsanpham;
     private String mausac;
     private String kichco;
-    private Integer soluong;
+    private int soluong;
     private String kieumau;
     private Double gianhap;
     private Double giaban;
-    private Integer giamgia;
+    private int giamgia;
     private String mota;
 
     // Constructor không tham số
@@ -28,8 +28,8 @@ public class SanPham implements Serializable {
 
 
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
-            String mausac, String kichco, Integer soluong, String kieumau,
-            Double gianhap, Double giaban, Integer giamgia, String mota) {
+            String mausac, String kichco, int soluong, String kieumau,
+            Double gianhap, Double giaban, int giamgia, String mota) {
         this.masanpham = masanpham;
         this.tensanpham = tensanpham;
         this.hinhanhsanpham = hinhanhsanpham;
@@ -45,7 +45,7 @@ public class SanPham implements Serializable {
 
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
             String mausac, String kieumau,
-            Double gianhap, Double giaban, Integer giamgia, String mota) {
+            Double gianhap, Double giaban, int giamgia, String mota) {
         this.masanpham = masanpham;
         this.tensanpham = tensanpham;
         this.hinhanhsanpham = hinhanhsanpham;
@@ -59,7 +59,7 @@ public class SanPham implements Serializable {
 
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
             String mausac, String kieumau,
-            Double giaban, Integer giamgia) {
+            Double giaban, int giamgia) {
         this.masanpham = masanpham;
         this.tensanpham = tensanpham;
         this.hinhanhsanpham = hinhanhsanpham;
@@ -112,11 +112,11 @@ public class SanPham implements Serializable {
         this.kichco = kichco;
     }
 
-    public Integer getSoluong() {
+    public int getSoluong() {
         return soluong;
     }
 
-    public void setSoluong(Integer soluong) {
+    public void setSoluong(int soluong) {
         this.soluong = soluong;
     }
 
@@ -144,11 +144,11 @@ public class SanPham implements Serializable {
         this.giaban = giaban;
     }
 
-    public Integer getGiamgia() {
+    public int getGiamgia() {
         return giamgia;
     }
 
-    public void setGiamgia(Integer giamgia) {
+    public void setGiamgia(int giamgia) {
         this.giamgia = giamgia;
     }
 

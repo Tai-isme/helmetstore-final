@@ -20,6 +20,7 @@ public class KhachHang {
     private String thoiGianHieuLucMaXacThuc;
     private String trangThaiXacThuc;
     private String hinhAvatar;
+    private int isAdmin;
 
     public KhachHang(String maKhachHang, String tenDangNhap, String matKhau, String email) {
         this.maKhachHang = maKhachHang;
@@ -33,7 +34,7 @@ public class KhachHang {
         this.matKhau = matKhau;
     }
 
-    public KhachHang(String maKhachHang, String tenDangNhap, String matKhau, String hoVaTen, String gioiTinh, Date ngaySinh, String soDienThoai, String email, String quocTich, String diaChiKhachHang, String diaChiNhanHang, boolean dangKyNhanBangTin, String maXacThuc, String thoiGianHieuLucMaXacThuc, String trangThaiXacThuc, String hinhAvatar) {
+    public KhachHang(String maKhachHang, String tenDangNhap, String matKhau, String hoVaTen, String gioiTinh, Date ngaySinh, String soDienThoai, String email, String quocTich, String diaChiKhachHang, String diaChiNhanHang, boolean dangKyNhanBangTin, String maXacThuc, String thoiGianHieuLucMaXacThuc, String trangThaiXacThuc, String hinhAvatar, int isAdmin) {
         this.maKhachHang = maKhachHang;
         this.tenDangNhap = tenDangNhap;
         this.matKhau = matKhau;
@@ -50,7 +51,10 @@ public class KhachHang {
         this.thoiGianHieuLucMaXacThuc = thoiGianHieuLucMaXacThuc;
         this.trangThaiXacThuc = trangThaiXacThuc;
         this.hinhAvatar = hinhAvatar;
+        this.isAdmin = isAdmin;
     }
+
+    
 
     public KhachHang(String maKhachHang, String hoVaTen, String gioiTinh, Date ngaySinh, String soDienThoai, String email, String quocTich, String diaChiKhachHang, String diaChiNhanHang, boolean dangKyNhanBangTin) {
         this.maKhachHang = maKhachHang;
@@ -64,8 +68,16 @@ public class KhachHang {
         this.diaChiNhanHang = diaChiNhanHang;
         this.dangKyNhanBangTin = dangKyNhanBangTin;
     }
-
+    
     public KhachHang() {
+    }
+
+    public int getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(int isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public String getMaKhachHang() {

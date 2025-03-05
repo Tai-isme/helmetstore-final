@@ -55,11 +55,11 @@
                         <div class="mb-3 d-flex justify-content-between align-items-center">
                             <h2>Add product</h2>
                             <button type="button" class="btn btn-outline-primary">
-                                <a href="category.jsp" class="text-decoration-none">Back</a>
+                                <a href="/project-final/admin?hanhdong=load" class="text-decoration-none">Back</a>
                             </button>
                         </div>
 
-                        <form action="<%= url%>/admin" method="GET">
+                        <form action="<%= url%>/admin" method="POST">
                             <input type="hidden" name="hanhdong" value="addProduct">
                             <div class="mb-3">
                                 <label for="masanpham" class="form-label">Id</label>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="hinhanhsanpham" class="form-label">Image</label>
-                                <input type="url" name="hinhanhsanpham" class="form-control" id="hinhanhsanpham" placeholder="URL hình ảnh" required>
+                                <input type="text" name="hinhanhsanpham" class="form-control" id="hinhanhsanpham" placeholder="URL hình ảnh" required>
                             </div>
                             <div class="mb-3">
                                 <label for="mausac" class="form-label">Color</label>

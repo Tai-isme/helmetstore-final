@@ -14,13 +14,13 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="index.jsp">
+        <a class="nav-link" href="/project-final/admin/index.jsp">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
 
     </li>
     <li class="nav-item active">
-        <a class="nav-link" href="category.jsp">
+        <a class="nav-link" href="/project-final/admin?hanhdong=load">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Category</span></a>
 

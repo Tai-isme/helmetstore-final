@@ -24,11 +24,11 @@
             rel="stylesheet">
 
         <!-- Custom styles for this template -->
-        <link href="css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="<%= url%>/admin/css/sb-admin-2.min.css" rel="stylesheet">
 
         <!-- Custom styles for this page -->
         <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-        <link href="<%= url%>/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="<%= url%>/admin/css/style.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body id="page-top">
@@ -50,40 +50,46 @@
                     <%@include file="topbar.jsp" %>
                     <!-- End of Topbar -->
 
+
                     <!-- Begin Page Content -->
                     <div class="container">
                         <div class="form-container">
                             <h3 class="text-center mb-4">Update Product Details</h3>
-                            <form id="updateProductForm" action="/admin/updateProduct" method="POST">
+                            <form action="<%=url%>/admin" method="POST">
+                                <%
+                                    SanPham sp = (SanPham) request.getAttribute("sp");
+                                    if (sp != null) {
+                                %>
+                                <input type="hidden" name="hanhdong" value="update">
                                 <!-- ID (readonly) -->
                                 <div class="mb-3">
-                                    <label for="productId" class="form-label">Product ID</label>
-                                    <input type="text" class="form-control" id="productId" name="masanpham" value="SP001" readonly>
+                                    <label for="masanpham" class="form-label">Product ID</label>
+                                    <input type="text" class="form-control" id="productId" name="masanpham" value="<%= sp.getMasanpham()%>" readonly>
                                 </div>
 
                                 <!-- Name -->
                                 <div class="mb-3">
-                                    <label for="productName" class="form-label">Product Name</label>
-                                    <input type="text" class="form-control" id="productName" name="tensanpham" value="Sample Product" required>
+                                    <label for="tensanpham" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="productName" name="tensanpham" value="<%= sp.getTensanpham()%>" required>
                                 </div>
 
                                 <!-- Color -->
                                 <div class="mb-3">
                                     <label for="color" class="form-label">Color</label>
-                                    <input type="text" class="form-control" id="color" name="mausac" value="Red" required>
+                                    <input type="text" class="form-control" id="color" name="mausac" value="<%= sp.getMausac()%>" required>
                                 </div>
 
                                 <!-- Type -->
                                 <div class="mb-3">
                                     <label for="type" class="form-label">Type</label>
-                                    <input type="text" class="form-control" id="type" name="kieumau" value="Casual" required>
+                                    <input type="text" class="form-control" id="type" name="kieumau" value="<%= sp.getKieumau()%>" required>
                                 </div>
 
                                 <!-- Size -->
                                 <div class="mb-3">
                                     <label for="size" class="form-label">Size</label>
                                     <select class="form-select" id="size" name="size" required>
-                                        <option value="">Select Size</option>
+                                        <option value="<%= sp.getKichco()%>"></option>
                                         <option value="S" selected>S</option>
                                         <option value="M">M</option>
                                         <option value="L">L</option>
@@ -94,31 +100,31 @@
                                 <!-- Quantity -->
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" name="soluong" value="10" min="0" required>
+                                    <input type="number" class="form-control" id="quantity" name="soluong" value="<%= sp.getSoluong()%>" required>
                                 </div>
 
                                 <!-- Input Price -->
                                 <div class="mb-3">
                                     <label for="inputPrice" class="form-label">Input Price</label>
-                                    <input type="number" class="form-control" id="inputPrice" name="gianhap" value="100000" min="0" step="1000" required>
+                                    <input type="number" class="form-control" id="inputPrice" name="gianhap" value="<%= sp.getGianhap()%>" min="0" step="1000" required>
                                 </div>
 
                                 <!-- Selling Price -->
                                 <div class="mb-3">
                                     <label for="sellingPrice" class="form-label">Selling Price</label>
-                                    <input type="number" class="form-control" id="sellingPrice" name="giaban" value="150000" min="0" step="1000" required>
+                                    <input type="number" class="form-control" id="sellingPrice" name="giaban" value="<%= sp.getGiaban()%>" min="0" step="1000" required>
                                 </div>
 
                                 <!-- Discount -->
                                 <div class="mb-3">
                                     <label for="discount" class="form-label">Discount (%)</label>
-                                    <input type="number" class="form-control" id="discount" name="giamgia" value="10" min="0" max="100" required>
+                                    <input type="number" class="form-control" id="discount" name="giamgia" value="<%= sp.getGiamgia()%>" min="0" max="100" required>
                                 </div>
 
                                 <!-- Description -->
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" name="mota" rows="3" required>Sample product description</textarea>
+                                    <textarea class="form-control" id="description" name="mota" rows="3" required><%= sp.getMota()%></textarea>
                                 </div>
 
                                 <!-- Buttons -->
@@ -126,10 +132,10 @@
                                     <button type="submit" class="btn btn-primary btn-custom">
                                         <i class="fas fa-save"></i> Save
                                     </button>
-                                    <button type="button" class="btn btn-secondary btn-custom" onclick="window.location.href = '/admin'">
-                                        <i class="fas fa-times"></i> Cancel
-                                    </button>
                                 </div>
+                                <%
+                                    }
+                                %>
                             </form>
                         </div>
                     </div>

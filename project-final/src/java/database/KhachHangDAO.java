@@ -49,8 +49,11 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
                 String thoiGianHieuLucMaXacThuc = rs.getString(14);
                 String trangThaiXacThuc = rs.getString(15);
                 String hinhAvatar = rs.getString(16);
+                int isAdmin = rs.getInt(17);
 
-                ketQua = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh, soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, dangKyNhanBangTin, maXacThuc, thoiGianHieuLucMaXacThuc, trangThaiXacThuc, hinhAvatar);
+                ketQua = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh,
+                        soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, dangKyNhanBangTin,
+                        maXacThuc, thoiGianHieuLucMaXacThuc, trangThaiXacThuc, hinhAvatar, isAdmin);
 
             }
 
@@ -191,8 +194,11 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
                 String thoiGianHieuLucMaXacThuc = rs.getString(14);
                 String trangThaiXacThuc = rs.getString(15);
                 String hinhAvatar = rs.getString(16);
+                int isAdmin = rs.getInt(17);
 
-                ketQua = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh, soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, dangKyNhanBangTin, maXacThuc, thoiGianHieuLucMaXacThuc, trangThaiXacThuc, hinhAvatar);
+                ketQua = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh,
+                        soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, dangKyNhanBangTin,
+                        maXacThuc, thoiGianHieuLucMaXacThuc, trangThaiXacThuc, hinhAvatar, isAdmin);
 
             }
 
@@ -291,6 +297,27 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
         }
 
         return ketQua;
+    }
+
+    public boolean checkIsAdmin(KhachHang khachHang) {
+        boolean result = false;
+        try {
+            Connection con = JDBCUtil.getConnection();
+
+            String sql = " SELECT * FROM khachhang WHERE tendangnhap = ? AND matkhau = ? AND isAdmin = 1 ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, khachHang.getTenDangNhap());
+            ps.setString(2, khachHang.getMatKhau());
+
+            ResultSet rs = ps.executeQuery();
+            result = rs.next();
+            con.close();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static void main(String[] args) {

@@ -57,13 +57,13 @@ public final class sidebar_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("    <!-- Nav Item - Dashboard -->\n");
       out.write("    <li class=\"nav-item active\">\n");
-      out.write("        <a class=\"nav-link\" href=\"index.jsp\">\n");
+      out.write("        <a class=\"nav-link\" href=\"/project-final/admin/index.jsp\">\n");
       out.write("            <i class=\"fas fa-fw fa-tachometer-alt\"></i>\n");
       out.write("            <span>Dashboard</span></a>\n");
       out.write("\n");
       out.write("    </li>\n");
       out.write("    <li class=\"nav-item active\">\n");
-      out.write("        <a class=\"nav-link\" href=\"category.jsp\">\n");
+      out.write("        <a class=\"nav-link\" href=\"/project-final/admin?hanhdong=load\">\n");
       out.write("            <i class=\"fas fa-fw fa-tachometer-alt\"></i>\n");
       out.write("            <span>Category</span></a>\n");
       out.write("\n");

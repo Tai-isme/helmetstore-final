@@ -57,8 +57,14 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <button type="button" class="btn btn-primary"><a class="btn btn-primary" href="<%=url%>/admin/addproduct.jsp" role="button">Add product</a></button>
+                                <form action="<%=url%>/admin" method="POST">
+                                    <input type="hidden" name="hanhdong" value="create">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Add new product
+                                    </button>
+                                </form>
                             </div>
+
                             <div class="card-body">
                                 <div class="table-responsive">
 
@@ -95,51 +101,40 @@
                                         </tfoot>
                                         <tbody>
                                             <%
-                                                AdminDAO ado = new AdminDAO();
-                                                List<SanPham> listSanPham = ado.selectAllSanPham();
-                                                List<SanPham_Size> listSanPham_Size = ado.selectAllSanPham_Size();
 
-                                                if (listSanPham != null && !listSanPham.isEmpty() && listSanPham_Size != null && !listSanPham_Size.isEmpty()) {
+                                                List<SanPham> listSanPham = (List<SanPham>) request.getAttribute("spList");
+                                                if (listSanPham != null && !listSanPham.isEmpty()) {
                                                     for (SanPham sanpham : listSanPham) {
-                                                        boolean hasSize = false; // kiểm tra sản phẩm có size không
-                                                        for (SanPham_Size sanpham_size : listSanPham_Size) {
-                                                            if (sanpham.getMasanpham().equals(sanpham_size.getMasanpham())) {
-                                                                hasSize = true;
                                             %>
                                             <tr>
                                                 <td><%= sanpham.getMasanpham()%></td>
                                                 <td><%= sanpham.getTensanpham()%></td>
                                                 <td><%= sanpham.getMausac()%></td>
                                                 <td><%= sanpham.getKieumau()%></td>
-                                                <td><%= sanpham_size.getSize()%></td>
-                                                <td><%= sanpham_size.getSoluong()%></td>
+                                                <td><%= sanpham.getKichco()%></td>
+                                                <td><%= sanpham.getSoluong()%></td>
                                                 <td><%= sanpham.getGianhap()%></td>
                                                 <td><%= sanpham.getGiaban()%></td>
                                                 <td><%= sanpham.getGiamgia()%></td>
                                                 <td><%= sanpham.getMota()%></td>
-                                                <td><button type="button" class="btn btn-secondary">Edit</button><button type="button" class="btn btn-danger">Delete</button></td>
+                                                <td>
+                                                    <div class="d-inline-flex gap-2">
+                                                        <form action="<%=url%>/admin" method="POST" class="d-inline">
+                                                            <input type="hidden" name="hanhdong" value="edit">
+                                                            <input type="hidden" name="masanpham" value="<%= sanpham.getMasanpham()%>">
+                                                            <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+                                                        </form>
+
+                                                        <form action="<%=url%>/admin" method="POST" class="d-inline">
+                                                            <input type="hidden" name="hanhdong" value="delete">
+                                                            <input type="hidden" name="masanpham" value="<%= sanpham.getMasanpham()%>">
+                                                            <input type="hidden" name="size" value="<%= sanpham.getKichco()%>">
+                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             </tr>
                                             <%
-                                                    }
-                                                }
-                                                // Nếu sản phẩm không có size nào, vẫn hiển thị 1 dòng (size và quantity rỗng)
-                                                if (!hasSize) {
-                                            %>
-                                            <tr>
-                                                <td><%= sanpham.getMasanpham()%></td>
-                                                <td><%= sanpham.getTensanpham()%></td>
-                                                <td><%= sanpham.getMausac()%></td>
-                                                <td><%= sanpham.getKieumau()%></td>
-                                                <td></td> <!-- Size rỗng -->
-                                                <td></td> <!-- Quantity rỗng -->
-                                                <td><%= sanpham.getGianhap()%></td>
-                                                <td><%= sanpham.getGiaban()%></td>
-                                                <td><%= sanpham.getGiamgia()%></td>
-                                                <td><%= sanpham.getMota()%></td>
-                                                <td><button type="button" class="btn btn-secondary">Edit</button><button type="button" class="btn btn-danger">Delete</button></td>
-                                            </tr>
-                                            <%
-                                                        }
                                                     }
                                                 }
                                             %>

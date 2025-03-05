@@ -24,7 +24,8 @@ public class AdminDAO {
 
     public List<SanPham> selectAllSanPham() {
         List<SanPham> listSanPham = new ArrayList<>();
-        String sql = " SELECT * FROM sanpham ";
+        String sql = " SELECT * FROM \n"
+                + "sanpham s JOIN sanpham_size ss ON s.masanpham = ss.masanpham";
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -47,6 +48,8 @@ public class AdminDAO {
                         rs.getString("tensanpham"),
                         rs.getString("hinhanhsanpham"),
                         rs.getString("mausac"),
+                        rs.getString("size"),
+                        rs.getInt("soluong"),
                         rs.getString("kieumau"),
                         rs.getDouble("gianhap"),
                         rs.getDouble("giaban"),
@@ -62,40 +65,6 @@ public class AdminDAO {
         }
 
         return listSanPham;
-    }
-
-    public List<SanPham_Size> selectAllSanPham_Size() {
-        List<SanPham_Size> listSanPham_Size = new ArrayList<>();
-        String sql = " SELECT * FROM sanpham_size ";
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            // Bước 1: Lấy Connection
-            conn = JDBCUtil.getConnection();
-
-            // Bước 2: Tạo PreparedStatement
-            stmt = conn.prepareStatement(sql);
-
-            // Bước 3: Thực thi truy vấn
-            rs = stmt.executeQuery();
-
-            // Bước 4: Xử lý dữ liệu
-            while (rs.next()) {
-                SanPham_Size sp_size = new SanPham_Size(
-                        rs.getString("masanpham"), rs.getString("size"), rs.getInt("soluong")
-                );
-                listSanPham_Size.add(sp_size);
-            }
-            JDBCUtil.close(conn);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return listSanPham_Size;
     }
 
     public int insertSanPham(SanPham sp) {
@@ -117,7 +86,7 @@ public class AdminDAO {
             ps.setDouble(7, sp.getGiaban());
             ps.setInt(8, sp.getGiamgia());
             ps.setString(9, sp.getMota());
-            
+
             // B3: Chạy câu lệnh SQL
             ketQua = ps.executeUpdate();
 
@@ -171,23 +140,125 @@ public class AdminDAO {
         return ketQua;
     }
 
+    public boolean delete(SanPham sp) {
+        String sql = " DELETE FROM sanpham WHERE masanpham = ? ";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, sp.getMasanpham());
+
+            stmt.executeUpdate();
+            JDBCUtil.close(conn);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        return false;
+    }
+
+    public boolean deleteSanPhamSize(SanPham sp) {
+        String sql = " DELETE FROM sanpham_size WHERE masanpham = ? and size = ?";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, sp.getMasanpham());
+            stmt.setString(2, sp.getKichco());
+
+            stmt.executeUpdate();
+            JDBCUtil.close(conn);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        return false;
+    }
+
+    public boolean updateSanPham(SanPham sp) {
+        String sql = " UPDATE sanpham\n"
+                + "SET tensanpham = ?,\n"
+                + "    hinhanhsanpham = ?,\n"
+                + "    mausac = ?,\n"
+                + "    kieumau = ?,\n"
+                + "    gianhap = ?,\n"
+                + "    giaban = ?,\n"
+                + "    giamgia = ?,\n"
+                + "    mota = ?\n"
+                + "WHERE masanpham = ?;";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, sp.getTensanpham());
+            stmt.setString(2, sp.getHinhanhsanpham());
+            stmt.setString(3, sp.getMausac());
+            stmt.setString(4, sp.getKieumau());
+            stmt.setDouble(5, sp.getGianhap());
+            stmt.setDouble(6, sp.getGiaban());
+            stmt.setInt(7, sp.getGiamgia());
+            stmt.setString(8, sp.getMota());
+            stmt.setString(9, sp.getMasanpham());
+
+            stmt.executeUpdate();
+            JDBCUtil.close(conn);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        return false;
+    }
+
+    public boolean updateSanPhamSize(SanPham sp) {
+        String sql = " UPDATE sanpham_size\n"
+                + "SET size = ?, \n"
+                + "    soluong = '?\n"
+                + "WHERE masanpham = ?;";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, sp.getKichco());
+            stmt.setString(2, sp.getKichco());
+            stmt.setString(3, sp.getMasanpham());
+
+            stmt.executeUpdate();
+            JDBCUtil.close(conn);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         AdminDAO ado = new AdminDAO();
-        String masanpahm =  "123123";
-        String size =  "L";
-        int soluong =  9999999;
-        SanPham sp = new SanPham(masanpahm, size, soluong);
-//        sp.setTensanpham("test");
-        //masanpham, tensanpham, hinhanhsanpham, mausac, kieumau, gianhap, giaban, giamgia, mota
-//        sp.setHinhanhsanpham("1.png");
-//        sp.setMausac("test");
-//        sp.setKieumau("test");
-//        sp.setGianhap(10.0);
-//        sp.setGiaban(9999.0);
-//        sp.setGiamgia(5);
-//        sp.setMota("test test test");
-        int result = ado.insertSize(sp);
-        System.out.println(result);
+        List<SanPham> list = ado.selectAllSanPham();
+        for (SanPham sanPham : list) {
+            System.out.println(sanPham.getKichco());
+        }
     }
 
 }
