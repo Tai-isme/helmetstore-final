@@ -22,6 +22,9 @@ public class KhachHang {
     private String hinhAvatar;
     private int isAdmin;
 
+    public KhachHang() {
+    }
+
     public KhachHang(String maKhachHang, String tenDangNhap, String matKhau, String email) {
         this.maKhachHang = maKhachHang;
         this.tenDangNhap = tenDangNhap;
@@ -54,8 +57,6 @@ public class KhachHang {
         this.isAdmin = isAdmin;
     }
 
-    
-
     public KhachHang(String maKhachHang, String hoVaTen, String gioiTinh, Date ngaySinh, String soDienThoai, String email, String quocTich, String diaChiKhachHang, String diaChiNhanHang, boolean dangKyNhanBangTin) {
         this.maKhachHang = maKhachHang;
         this.hoVaTen = hoVaTen;
@@ -68,9 +69,24 @@ public class KhachHang {
         this.diaChiNhanHang = diaChiNhanHang;
         this.dangKyNhanBangTin = dangKyNhanBangTin;
     }
-    
-    public KhachHang() {
+
+    public KhachHang(String maKhachHang, String tenDangNhap, String matKhau, String hoVaTen, String gioiTinh, Date ngaySinh, String soDienThoai, String email, String quocTich, String diaChiKhachHang, String diaChiNhanHang, String hinhAvatar, int isAdmin) {
+        this.maKhachHang = maKhachHang;
+        this.tenDangNhap = tenDangNhap;
+        this.matKhau = matKhau;
+        this.hoVaTen = hoVaTen;
+        this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
+        this.soDienThoai = soDienThoai;
+        this.email = email;
+        this.quocTich = quocTich;
+        this.diaChiKhachHang = diaChiKhachHang;
+        this.diaChiNhanHang = diaChiNhanHang;
+        this.hinhAvatar = hinhAvatar;
+        this.isAdmin = isAdmin;
     }
+
+    
 
     public int getIsAdmin() {
         return isAdmin;
@@ -207,16 +223,5 @@ public class KhachHang {
     public void setHinhAvatar(String hinhAvatar) {
         this.hinhAvatar = hinhAvatar;
     }
-
-    @Override
-    public String toString() {
-        return "KhachHang{" + "maKhachHang=" + maKhachHang + ", tenDangNhap=" + tenDangNhap + ", matKhau=" + matKhau + ", hoVaTen=" + hoVaTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh + ", soDienThoai=" + soDienThoai + ", email=" + email + ", quocTich=" + quocTich + ", diaChiKhachHang=" + diaChiKhachHang + ", diaChiNhanHang=" + diaChiNhanHang + ", dangKyNhanBangTin=" + dangKyNhanBangTin + ", maXacThuc=" + maXacThuc + ", thoiGianHieuLucMaXacThuc=" + thoiGianHieuLucMaXacThuc + ", trangThaiXacThuc=" + trangThaiXacThuc + ", hinhAvatar=" + hinhAvatar + '}';
-    }
-
-    
-    
-    
-    
-    
 
 }

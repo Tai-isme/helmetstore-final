@@ -37,7 +37,7 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
                         rs.getString("tensanpham"),
                         rs.getString("hinhanhsanpham"),
                         rs.getString("mausac"),
-                        rs.getString("kieumau"),
+                        rs.getString("categoryID"),
                         rs.getDouble("gianhap"),
                         rs.getDouble("giaban"),
                         rs.getInt("giamgia"),
@@ -154,7 +154,16 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
     @Override
     public int update(SanPham sp) {
         int ketQua = 0;
-        String sql = "UPDATE sanpham SET tensanpham=?, hinhanhsanpham=?, mausac=?, kichco=?, soluong=?, kieumau=?, gianhap=?, giaban=?, giamgia=?, mota=? WHERE masanpham=?";
+        String sql = " UPDATE sanpham\n"
+                + "SET tensanpham = ?,\n"
+                + "    hinhanhsanpham = ?,\n"
+                + "    mausac = ?,\n"
+                + "    categoryID = ?,\n"
+                + "    gianhap = ?,\n"
+                + "    giaban = ?,\n"
+                + "    giamgia = ?,\n"
+                + "    mota = ?\n"
+                + "WHERE masanpham = ?;";
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -166,20 +175,20 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
             stmt.setString(1, sp.getTensanpham());
             stmt.setString(2, sp.getHinhanhsanpham());
             stmt.setString(3, sp.getMausac());
-            stmt.setString(4, sp.getKichco());
-            stmt.setInt(5, sp.getSoluong());
-            stmt.setString(6, sp.getKieumau());
-            stmt.setDouble(7, sp.getGianhap());
-            stmt.setDouble(8, sp.getGiaban());
-            stmt.setInt(9, sp.getGiamgia());
-            stmt.setString(10, sp.getMota());
-            stmt.setString(11, sp.getMasanpham());
+            stmt.setString(4, sp.getKieumau());
+            stmt.setDouble(5, sp.getGianhap());
+            stmt.setDouble(6, sp.getGiaban());
+            stmt.setInt(7, sp.getGiamgia());
+            stmt.setString(8, sp.getMota());
+            stmt.setString(9, sp.getMasanpham());
 
-            ketQua = stmt.executeUpdate();
-
+            stmt.executeUpdate();
             JDBCUtil.close(conn);
+            ketQua = 1;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+
         }
         return ketQua;
     }
@@ -395,4 +404,94 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
         return sanPham;
     }
 
+    public SanPham selectByIdSanPhamSize(String masanpham) {
+
+        String sql = " SELECT s.masanpham, s.tensanpham, s.hinhanhsanpham, s.mausac, s.categoryID, s.gianhap, s.giaban, s.giamgia, s.mota, ss.size,ss.soluong\n"
+                + "FROM sanpham s JOIN sanpham_size ss ON s.masanpham = ss.masanpham\n"
+                + "WHERE s.masanpham = ? ";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        SanPham sp = new SanPham();
+
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, masanpham);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                sp.setMasanpham(rs.getString(1));
+                sp.setTensanpham(rs.getString(2));
+                sp.setHinhanhsanpham(rs.getString(3));
+                sp.setMausac(rs.getString(4));
+                sp.setKieumau(rs.getString(5));
+                sp.setGianhap(rs.getDouble(6));
+                sp.setGiaban(rs.getDouble(7));
+                sp.setGiamgia(rs.getInt(8));
+                sp.setMota(rs.getString(9));
+                sp.setKichco(rs.getString(10));
+                sp.setSoluong(rs.getInt(11));
+            }
+
+            JDBCUtil.close(conn);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return sp;
+    }
+
+    public int minusPoduct(String masanpham, String size, int soluong) {
+        int rs = 0;
+        SanPham sanPham = null;
+        String sql = " update sanpham_size \n"
+                + " set soluong = soluong - ? \n"
+                + " where masanpham = ?  AND size = ?";
+        try {
+            Connection conn = null;
+            PreparedStatement stmt = null;
+
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, soluong);
+            stmt.setString(2, masanpham);
+            stmt.setString(3, size);
+            rs = stmt.executeUpdate();
+
+            JDBCUtil.close(conn);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rs;
+
+    }
+public int updateAnhSanPham(SanPham sanpham) {
+        int ketQua = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+
+            String sql = " UPDATE sanpham\n"
+                    + " SET hinhanhsanpham = ?\n"
+                    + " WHERE masanpham = ?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, sanpham.getHinhanhsanpham());
+            ps.setString(2, sanpham.getMasanpham());
+
+            ketQua = ps.executeUpdate();
+
+            JDBCUtil.close(con);
+
+        } catch (Exception e) {
+            System.out.println("Lỗi ở updateAvatar");
+            e.printStackTrace();
+        }
+
+        return ketQua;
+    }
 }

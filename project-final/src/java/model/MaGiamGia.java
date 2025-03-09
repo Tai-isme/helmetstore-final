@@ -74,5 +74,8 @@ public class MaGiamGia {
     public void setHinhanhvoucher(String hinhanhvoucher) {
         this.hinhanhvoucher = hinhanhvoucher;
     }
+    
+    
+    
 
 }

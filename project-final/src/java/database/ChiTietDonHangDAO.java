@@ -22,9 +22,8 @@ public class ChiTietDonHangDAO {
 
     public int insert(ChiTietDonHang ctdh) throws SQLException {
         int result = 0;
-        Time time = new Time();
-        String ngayDatHang = time.getTimeNow();
-        String ngayGiaoHangDuKien = time.timeNowPlus_X_minutes(7200);
+        
+
         try {
             Connection con = JDBCUtil.getConnection();
             String sql = "INSERT INTO chitietdonhang VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -33,13 +32,13 @@ public class ChiTietDonHangDAO {
             ps.setString(2, ctdh.getMaSanPham());
             ps.setString(3, ctdh.getTrangThaiDonHang());
             ps.setString(4, ctdh.getPhuongThucThanhToan());
-            ps.setString(5, ctdh.getTrangThaiThanhToan());
-            ps.setString(6, ngayDatHang);
-            ps.setString(7, ngayGiaoHangDuKien);
-            ps.setString(8, ctdh.getDiaChiGiaoHang());
-            ps.setInt(9, ctdh.getSoLuongSanPhamMua());
-            ps.setDouble(10, ctdh.getTienVanChuyen());
-            ps.setInt(11, ctdh.getVat());
+            ps.setString(5, ctdh.getNgayDatHang());
+            ps.setString(6, ctdh.getNgayGiaoHangDuKien());
+            ps.setString(7, ctdh.getDiaChiGiaoHang());
+            ps.setInt(8, ctdh.getSoLuongSanPhamMua());
+            ps.setDouble(9, ctdh.getTienVanChuyen());
+            ps.setInt(10, ctdh.getVat());
+            ps.setString(11, ctdh.getMagiamgia());
             ps.setDouble(12, ctdh.getTongTien());
             result = ps.executeUpdate();
             con.close();
@@ -64,10 +63,7 @@ public class ChiTietDonHangDAO {
 
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                ketQua = new ChiTietDonHang(rs.getString("madonhang"), rs.getString("masanpham"), rs.getString("trangthaidonhang"), rs.getString("phuongthucthanhtoan"), rs.getString("trangthaithanhtoan"),
-                        rs.getString("ngaydathang"), rs.getString("ngaygiaohangdukien"), rs.getString("diachigiaohang"), rs.getInt("soluongsanphammua"), rs.getDouble("tienvanchuyen"), rs.getInt("vat"), rs.getDouble("tongtien"));
-            }
+            
 
             JDBCUtil.close(con);
 
@@ -87,7 +83,7 @@ public class ChiTietDonHangDAO {
                 System.out.println("Mã sản phẩm: " + chiTietDonHang.getMaSanPham());
                 System.out.println("Trạng thái đơn hàng: " + chiTietDonHang.getTrangThaiDonHang());
                 System.out.println("Phương thức thanh toán: " + chiTietDonHang.getPhuongThucThanhToan());
-                System.out.println("Trạng thái thanh toán: " + chiTietDonHang.getTrangThaiThanhToan());
+            
                 System.out.println("Ngày đặt hàng: " + chiTietDonHang.getNgayDatHang());
                 System.out.println("Ngày giao hàng dự kiến: " + chiTietDonHang.getNgayGiaoHangDuKien());
                 System.out.println("Địa chỉ giao hàng: " + chiTietDonHang.getDiaChiGiaoHang());

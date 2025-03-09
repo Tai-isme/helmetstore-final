@@ -11,22 +11,32 @@ public class SanPham implements Serializable {
     private String kichco;
     private int soluong;
     private String kieumau;
-    private Double gianhap;
-    private Double giaban;
-    private int giamgia;
+    private double gianhap;
+    private double giaban;
+    private Integer giamgia;
     private String mota;
+    private String gianhapformated;
+    private String giabanformated;
 
     // Constructor không tham số
     public SanPham() {
     }
 
-    public SanPham(String masanpham, String size, int soluong){
-        this.masanpham = masanpham;
+    public SanPham(String maSanPham, String size, int soLuong) {
+        this.masanpham = maSanPham;
         this.kichco = size;
-        this.soluong = soluong;
+        this.soluong = soLuong;
+
     }
 
+    public SanPham(String maSanPham, String size, int soLuong, double giaTien) {
+        this.masanpham = maSanPham;
+        this.kichco = size;
+        this.soluong = soLuong;
+        this.giaban = giaTien;
+    }
 
+    // Constructor đầy đủ tham số
     public SanPham(String masanpham, String tensanpham, String hinhanhsanpham,
             String mausac, String kichco, int soluong, String kieumau,
             Double gianhap, Double giaban, int giamgia, String mota) {
@@ -158,6 +168,22 @@ public class SanPham implements Serializable {
 
     public void setMota(String mota) {
         this.mota = mota;
+    }
+
+    public String getGianhapformated() {
+        return gianhapformated;
+    }
+
+    public void setGianhapformated(String gianhapformated) {
+        this.gianhapformated = gianhapformated;
+    }
+
+    public String getGiabanformated() {
+        return giabanformated;
+    }
+
+    public void setGiabanformated(String giabanformated) {
+        this.giabanformated = giabanformated;
     }
 
     @Override

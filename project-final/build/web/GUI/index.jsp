@@ -49,9 +49,12 @@
     </head>
 
     <body>
+
         <div class="hero_area">
             <!-- header -->
             <%@include file="header.jsp" %>
+
+
             <!-- header -->
 
             <!-- slider section -->
@@ -65,7 +68,7 @@
                                         <div class="col-md-7">
                                             <div class="detail-box">
                                                 <h1>
-                                                    Text
+                                                    <%=khachHang.getMaKhachHang()%>
                                                 </h1>
                                                 <p>
                                                     text
@@ -94,14 +97,15 @@
                 <div class="container">
                     <div class="heading_container heading_center">
                         <h2>
-                            <a href="<%= url1 %>/admin/category.jsp">News arrivals</a>
+                            News arrivals
                         </h2>
                     </div>
                     <div class="row">
                         <%  SanPhamDAO dao = new SanPhamDAO();
 
-                            List<SanPham> list = dao.selectAll();
+                           /* List<SanPham> list = dao.selectAll();*/
 
+                           List<SanPham> list = (List<SanPham>) request.getAttribute("listsanpham");
                             if (list != null && !list.isEmpty()) {
                                 int count = 0;
                                 for (SanPham sanPham : list) {
@@ -113,7 +117,7 @@
                         %>
                         <div class="col-sm-6 col-md-4 col-lg-3">
                             <div class="box">
-                                <a href="<%=url%>/sanpham/product-details.jsp?masanpham=<%=sanPham.getMasanpham()%>">
+                                <a href="<%=url%>/san-pham?hanhdong=viewproductdetail&masanpham=<%=sanPham.getMasanpham()%>">
                                     <div class="img-box">
                                         <img src="<%= url1%>/GUI/imgsanpham/<%=sanPham.getHinhanhsanpham()%>" alt="Ảnh nón">
                                     </div>
@@ -159,13 +163,13 @@
             <div class="row">
 
                 <%
-                    MaGiamGiaDAO maGiamGiaDAO = new MaGiamGiaDAO();
-                    List<MaGiamGia> listMaGiamGia = maGiamGiaDAO.selectAll();
+                    
+                    List<MaGiamGia> listMaGiamGia = (List<MaGiamGia>) request.getAttribute("listmagiamgia");
 
                     if (listMaGiamGia != null && !listMaGiamGia.isEmpty()) {
                         for (MaGiamGia maGiamGia : listMaGiamGia) {
                 %>   
-               <!-- <div  class="col-1"> </div> -->
+                <!-- <div  class="col-1"> </div> -->
                 <div  class="col-3 row">
                     <div class="card-item">
                         <img class="card-img row " alt="anh voucher" src="<%=url1%>/GUI/imgvoucher/<%=maGiamGia.getHinhanhvoucher()%>">
@@ -173,12 +177,12 @@
                             <p style="font-size: 24px;font-weight: 500 " class="card-title"><%=maGiamGia.getTenMaGiamGia()%></p>
                             <p class="card-text"> <h5>EXP: <small class="text-muted"><%=maGiamGia.getNgayHetHan()%></small></h5> </p>
                         </div>
-                        
+
                     </div>
-<form class="card-getvalue" action="#" method="post">
-                            <!--<button class="btn btn-primary getValue">Get</button>-->
-                            <input class="btn btn-primary" value="Get" >
-                        </form>
+                    <form class="card-getvalue" action="#" method="post">
+                        <!--<button class="btn btn-primary getValue">Get</button>-->
+                        <input class="btn btn-primary" value="Get" >
+                    </form>
                 </div>
 
                 <!--<div  class="col-2"></div>-->

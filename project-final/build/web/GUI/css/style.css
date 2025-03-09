@@ -1085,6 +1085,11 @@ p {
 }
 
 /* End check out */
+.avatar {
+    width: 40px !important;  /* Giữ kích thước cố định */
+    height: 40px !important;
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+}
 
 /* end footer section*/
 /*# sourceMappingURL=style.css.map */

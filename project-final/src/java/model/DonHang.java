@@ -23,6 +23,12 @@ public class DonHang {
         this.makhachhang = makhachhang;
         this.masanpham = masanpham;
     }
+    
+    public DonHang(String madonhang, String makhachhang) {
+        this.madonhang = madonhang;
+        this.makhachhang = makhachhang;
+     
+    }
 
     public String getMadonhang() {
         return madonhang;

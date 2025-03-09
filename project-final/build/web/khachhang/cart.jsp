@@ -1,4 +1,5 @@
-<%@page import="model.Money"%>
+
+<%@page import="utils.Money"%>
 <%@page import="model.GioHang"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="database.GioHangDAO"%>
@@ -132,9 +133,16 @@
                             <%}%>
                             <div class="card">
                                 <div class="card-body">
+                                    <form action="<%= url %>/khachhang/checkout.jsp?action=buynow" method="post">
+                                        
+                                        <input type="submit" class="btn btn-primary" value ="Check out" >
+                                    </form>
+                                    <a href="<%= url %>/khachhang/checkout.jsp?action=buynow" class="nav-link mb-1">
+                                                    dsfsdfsdf
+                                                </a>
 <!--                                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-block btn-lg"
                                              data-mdb-ripple-color="dark" class="btn btn-outline-dark"><a href="<%= url%>/khachhang/checkout.jsp">Check out</a></button>-->
-<a href="<%= url%>/khachhang/checkout.jsp">Check out</a>
+
                                 </div>
                             </div>
                         </div>

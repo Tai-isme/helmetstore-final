@@ -1,3 +1,4 @@
+<%@page import="java.util.Random"%>
 <%@page import="model.KhachHang"%>
 <% String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath(); %>
 <% String currentUrl = request.getRequestURI();%>
@@ -18,11 +19,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  ">
                 <li class="nav-item <%= currentUrl.contains("index.jsp") ? "active" : ""%>">
-                    <a class="nav-link" href="<%=url%>/GUI/index.jsp">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="<%=url%>/web?">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item <%= currentUrl.contains("shop.jsp") ? "active" : ""%>">
                     <a class="nav-link" href="<%=url%>/san-pham?hanhdong=searchByConditions&types=&color=&size=&price=">
-                        Shops
+                        Products
                     </a>
                 </li>
                 <li class="nav-item <%= currentUrl.contains("contact.jsp") ? "active" : ""%>">
@@ -36,10 +37,15 @@
                     KhachHang khachHang = null;
                     if (obj != null) {
                         khachHang = (KhachHang) obj;
+                    }else{
+//                        response.sendRedirect("web");
                     }
                 %>
                 <%
                     if (khachHang == null) {
+                        khachHang = new KhachHang();
+                        Random rd = new Random();
+                        khachHang.setMaKhachHang("no"+System.currentTimeMillis() + rd.nextInt(1000) + "");
                 %> 
 
                 <a href="<%= url%>/khachhang/login.jsp">

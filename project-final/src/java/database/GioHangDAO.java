@@ -320,4 +320,31 @@ public class GioHangDAO implements DAOInterface<GioHang> {
         return result;
     }
 
+    public int updateAfterPay(GioHang t) {
+        int result = 0;
+        // Giả sử cập nhật chỉ trường 'soluong', giữ nguyên các trường khóa
+        String sql = "update giohang\n"
+                + "set soluong = soluong - ?\n"
+                + "where makhachhang = ? and masanpham = ? AND size = ? ";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, t.getSoluong());
+            stmt.setString(2, t.getMakhachhang());
+            stmt.setString(3, t.getMasanpham());
+            stmt.setString(4, t.getSize());
+
+            result = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JDBCUtil.close(conn);
+        }
+        return result;
+    }
+
 }

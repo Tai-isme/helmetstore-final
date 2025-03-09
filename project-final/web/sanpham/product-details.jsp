@@ -1,4 +1,5 @@
-<%@page import="model.Money"%>
+
+<%@page import="utils.Money"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="model.SanPham"%>
 <%@page import="java.util.List"%>
@@ -57,16 +58,18 @@
         <div class="hero_area">
             <!-- header -->
             <%@include file="/GUI/header.jsp" %>
+            <%
+            
+                %>
             <!-- header -->
             <!-- content -->
             <section class="py-5">
                 <div class="container">
 
                     <!--Lấy sản phẩm hiện lên-->
-                    <%                        String masanpham = request.getParameter("masanpham");
-                        SanPhamDAO dao = new SanPhamDAO();
-                        SanPham sp1 = new SanPham();
-                        sp1 = dao.selectById(masanpham);
+                    <%  
+                        SanPham sp1 = (SanPham) request.getAttribute("sanpham");
+                        
                         if (sp1 == null) {
                             System.out.println("sp1 bị null");
                         } else {
@@ -85,17 +88,17 @@
                                 </div>
                                 <div class="carousel-inner" >
                                     <div class="carousel-item active">
-                                        <img width="400px"src="../GUI/imgsanpham/<%= sp1.getHinhanhsanpham()%> " class="d-block w-100" alt="...">
+                                        <img width="400px"src="<%=url%>/GUI/imgsanpham/<%= sp1.getHinhanhsanpham()%> " class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item">
-                                        <img width="400" src="../GUI/imgsanpham/2.png" class="d-block w-100" alt="...">
+                                        <img width="400" src="<%=url%>/GUI/imgsanpham/2.png" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item">
-                                        <img width="400px" src="../GUI/imgsanpham/3.png" class="d-block w-100" alt="...">
+                                        <img width="400px" src="<%=url%>/GUI/imgsanpham/3.png" class="d-block w-100" alt="...">
                                     </div>
 
                                     <div class="carousel-item">
-                                        <img width="400px" src="../GUI/imgsanpham/4.png" class="d-block w-100" alt="...">
+                                        <img width="400px" src="<%=url%>/GUI/imgsanpham/4.png" class="d-block w-100" alt="...">
                                     </div>
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -108,10 +111,10 @@
                                 </button>
                             </div>
                             <div class="row">
-                                <div class="col-3"> <img width="120px" src="../GUI/imgsanpham/1.png"> </div>
-                                <div class="col-3"> <img width="120px" src="../GUI/imgsanpham/1.png"> </div>
-                                <div class="col-3"> <img width="120px" src="../GUI/imgsanpham/1.png"> </div>
-                                <div class="col-3"> <img width="120px" src="../GUI/imgsanpham/1.png"> </div>
+                                <div class="col-3"> <img width="120px" src="<%=url%>/GUI/imgsanpham/1.png"> </div>
+                                <div class="col-3"> <img width="120px" src="<%=url%>/GUI/imgsanpham/1.png"> </div>
+                                <div class="col-3"> <img width="120px" src="<%=url%>/GUI/imgsanpham/1.png"> </div>
+                                <div class="col-3"> <img width="120px" src="<%=url%>/GUI/imgsanpham/1.png"> </div>
 
 
                             </div>
@@ -164,7 +167,7 @@
                                 <hr />
 
                                 <form class="row mb-4" action="<%=url%>/khach-hang" method="get">
-                                    <input name="masanpham" value="<%=sp1.getMasanpham()%>">
+                               <input name="masanpham" value="<%=sp1.getMasanpham()%>">
                                     <div class=" col-12">
                                         <label class="mb-2">Size</label>
                                         <select class="form-select border border-secondary" style="width: 65px" name="size">
@@ -176,8 +179,11 @@
                                     <!-- col.// -->
                                     <div class="row mt-3">
                                         <div class="form-group col-3">
-                                                         
+<!--                                            <form action="<%= url%>/khachhang/checkout.jsp" method="get">       
                                             <button  type="submit" name="hanhdong" value="buynow" class="btn btn-warning mb-2">Buy Now</button>
+                                            </form>  -->
+                                            <!--<a href="<%= url%>/khachhang/checkout.jsp?masanpham=THT-002&size=">Buynow</a>-->
+                                            <a href="#" onclick="redirectToCheckout();">Buy Now</a>
                                         </div>
 
                                         <div class="form-group col-5">
@@ -305,7 +311,7 @@
 
                                         <%
 
-                                            List<SanPham> list = dao.selectAll();
+                                            List<SanPham> list = (List<SanPham>) request.getAttribute("list");
 
                                             int count4 = -1;
                                             for (SanPham sp : list) {
@@ -316,7 +322,7 @@
                                         %>
                                         <div class="d-flex mb-3">
                                             <a href="#" class="me-3">
-                                                <img src="../GUI/imgsanpham/1.png" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+                                                <img src="<%=url%>/GUI/imgsanpham/<%=sp.getHinhanhsanpham()%>" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
                                             </a>
                                             <div class="info">
                                                 <a href="#" class="nav-link mb-1">
@@ -346,5 +352,16 @@
             </section>
         </div>
         <!-- end hero area -->
-    </body>
-</html>
+        <script>
+    function redirectToCheckout() {
+        // Lấy giá trị của trường size và masanpham từ form
+        var size = document.querySelector('select[name="size"]').value;
+        var masanpham = document.querySelector('input[name="masanpham"]').value;
+        // Tạo URL với tham số size và masanpham
+        var url = '<%= url %>/khachhang/checkout.jsp?action=buynow&masanpham=' + encodeURIComponent(masanpham) + '&size=' + encodeURIComponent(size);
+        // Chuyển hướng đến URL đó
+        window.location.href = url;
+    }
+</script>
+    </body>hanhdong=addtocart&masanpham=THT-001
+</html>khach-hang?size=S&hanhdong=addtocart

@@ -10,10 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import static java.util.Collections.list;
 import java.util.List;
+import model.Categories;
+import model.KhachHang;
 import model.SanPham;
-import model.SanPham_Size;
 import utils.JDBCUtil;
 
 /**
@@ -24,8 +24,12 @@ public class AdminDAO {
 
     public List<SanPham> selectAllSanPham() {
         List<SanPham> listSanPham = new ArrayList<>();
-        String sql = " SELECT * FROM \n"
-                + "sanpham s JOIN sanpham_size ss ON s.masanpham = ss.masanpham";
+        String sql = " select \n"
+                + "s.masanpham, s.tensanpham,s.hinhanhsanpham,s.mausac,s.gianhap,s.giaban,s.giamgia,s.mota,\n"
+                + "c.categoryID, c.categoryName,\n"
+                + "sz.size, sz.soluong\n"
+                + "from sanpham s join categories c ON c.categoryID = s.categoryID\n"
+                + "join sanpham_size sz on sz.masanpham = s.masanpham ";
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -50,7 +54,7 @@ public class AdminDAO {
                         rs.getString("mausac"),
                         rs.getString("size"),
                         rs.getInt("soluong"),
-                        rs.getString("kieumau"),
+                        rs.getString("categoryName"),
                         rs.getDouble("gianhap"),
                         rs.getDouble("giaban"),
                         rs.getInt("giamgia"),
@@ -67,6 +71,38 @@ public class AdminDAO {
         return listSanPham;
     }
 
+    public List<Categories> selectType() {
+        List<Categories> listCategories = new ArrayList<>();
+        String sql = " SELECT * FROM categories ";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Bước 1: Lấy Connection
+            conn = JDBCUtil.getConnection();
+
+            // Bước 2: Tạo PreparedStatement
+            stmt = conn.prepareStatement(sql);
+
+            // Bước 3: Thực thi truy vấn
+            rs = stmt.executeQuery();
+
+            // Bước 4: Xử lý dữ liệu
+            while (rs.next()) {
+                Categories c = new Categories(rs.getString("categoryId"), rs.getString("categoryName"));
+                listCategories.add(c);
+            }
+            JDBCUtil.close(conn);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listCategories;
+    }
+
     public int insertSanPham(SanPham sp) {
         int ketQua = 0;
         try {
@@ -74,7 +110,7 @@ public class AdminDAO {
             Connection c = JDBCUtil.getConnection();
 
             // B2: Tạo câu SQL
-            String sql = " INSERT INTO sanpham(masanpham, tensanpham, hinhanhsanpham, mausac, kieumau, gianhap, giaban, giamgia, mota)\n"
+            String sql = " INSERT INTO sanpham(masanpham, tensanpham, hinhanhsanpham, mausac, categoryID, gianhap, giaban, giamgia, mota)\n"
                     + "VALUES (?,?,?,?,?,?,?,?,?) ";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, sp.getMasanpham());
@@ -98,7 +134,7 @@ public class AdminDAO {
             JDBCUtil.close(c);
 
         } catch (SQLException e) {
-            System.out.println("Insert thất bại");
+            System.out.println("Insert sp thất bại");
             e.printStackTrace();
             e.getErrorCode();
             e.getSQLState();
@@ -131,7 +167,7 @@ public class AdminDAO {
             JDBCUtil.close(c);
 
         } catch (SQLException e) {
-            System.out.println("Insert thất bại");
+            System.out.println("Insert sp1 thất bại");
             e.printStackTrace();
             e.getErrorCode();
             e.getSQLState();
@@ -185,51 +221,96 @@ public class AdminDAO {
         return false;
     }
 
-    public boolean updateSanPham(SanPham sp) {
-        String sql = " UPDATE sanpham\n"
-                + "SET tensanpham = ?,\n"
-                + "    hinhanhsanpham = ?,\n"
-                + "    mausac = ?,\n"
-                + "    kieumau = ?,\n"
-                + "    gianhap = ?,\n"
-                + "    giaban = ?,\n"
-                + "    giamgia = ?,\n"
-                + "    mota = ?\n"
-                + "WHERE masanpham = ?;";
+    public boolean updateSanPhamSize(SanPham sp) {
+        String sqlCheck = "SELECT COUNT(*) FROM sanpham_size WHERE masanpham = ? AND size = ?";
+        String sqlUpdate = "UPDATE sanpham_size SET soluong = ? WHERE masanpham = ? AND size = ?";
+        String sqlInsert = "INSERT INTO sanpham_size (masanpham, size, soluong) VALUES (?, ?, ?)";
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
+        try (Connection conn = JDBCUtil.getConnection();
+                PreparedStatement checkStmt = conn.prepareStatement(sqlCheck);
+                PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate);
+                PreparedStatement insertStmt = conn.prepareStatement(sqlInsert)) {
 
-        try {
-            conn = JDBCUtil.getConnection();
-            stmt = conn.prepareStatement(sql);
+            // Kiểm tra xem sản phẩm có tồn tại hay không
+            checkStmt.setString(1, sp.getMasanpham());
+            checkStmt.setString(2, sp.getKichco());
 
-            stmt.setString(1, sp.getTensanpham());
-            stmt.setString(2, sp.getHinhanhsanpham());
-            stmt.setString(3, sp.getMausac());
-            stmt.setString(4, sp.getKieumau());
-            stmt.setDouble(5, sp.getGianhap());
-            stmt.setDouble(6, sp.getGiaban());
-            stmt.setInt(7, sp.getGiamgia());
-            stmt.setString(8, sp.getMota());
-            stmt.setString(9, sp.getMasanpham());
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
 
-            stmt.executeUpdate();
-            JDBCUtil.close(conn);
+            if (count > 0) {
+                // Nếu đã tồn tại thì UPDATE
+                updateStmt.setInt(1, sp.getSoluong());
+                updateStmt.setString(2, sp.getMasanpham());
+                updateStmt.setString(3, sp.getKichco());
+                updateStmt.executeUpdate();
+            } else {
+                // Nếu chưa tồn tại thì INSERT
+                insertStmt.setString(1, sp.getMasanpham());
+                insertStmt.setString(2, sp.getKichco());
+                insertStmt.setInt(3, sp.getSoluong());
+                insertStmt.executeUpdate();
+            }
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-
         }
         return false;
     }
 
-    public boolean updateSanPhamSize(SanPham sp) {
-        String sql = " UPDATE sanpham_size\n"
-                + "SET size = ?, \n"
-                + "    soluong = '?\n"
-                + "WHERE masanpham = ?;";
+    public List<KhachHang> userList() {
+        List<KhachHang> list = new ArrayList<KhachHang>();
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = " SELECT * FROM khachhang ";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs != null) {
+                while (rs.next()) {
+                    KhachHang kh = new KhachHang();
+                    kh.setMaKhachHang(rs.getString("makhachhang"));
+                    kh.setTenDangNhap(rs.getString("tendangnhap"));
+                    kh.setMatKhau(rs.getString("matkhau"));
+                    kh.setHoVaTen(rs.getString("hovaten"));
+                    kh.setGioiTinh(rs.getString("gioitinh"));
+                    kh.setNgaySinh(rs.getDate("ngaysinh"));
+                    kh.setSoDienThoai(rs.getString("sodienthoai"));
+                    kh.setEmail(rs.getString("email"));
+                    kh.setQuocTich(rs.getString("quoctich"));
+                    kh.setDiaChiKhachHang(rs.getString("diachikhachhang"));
+                    kh.setDiaChiNhanHang(rs.getString("diachinhanhang"));
+                    kh.setIsAdmin(rs.getInt("isAdmin"));
+                    kh.setHinhAvatar(rs.getString("hinhavatar"));
+                    list.add(kh);
+                }
+            }
+            con.close();
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
+    public boolean deleteUser(KhachHang kh) {
+        String sql = " UPDATE khachhang\n"
+                + "SET \n"
+                + "    tenDangNhap = NULL,\n"
+                + "    matKhau = NULL,\n"
+                + "    hoVaTen = NULL,\n"
+                + "    gioiTinh = NULL,\n"
+                + "    ngaySinh = NULL,\n"
+                + "    soDienThoai = NULL,\n"
+                + "    email = NULL,\n"
+                + "    quocTich = NULL,\n"
+                + "    diaChiKhachHang = NULL,\n"
+                + "    diaChiNhanHang = NULL,\n"
+                + "    dangKyNhanBangTin = NULL,\n"
+                + "    maXacThuc = NULL,\n"
+                + "    thoiGianHieuLucMaXacThuc = NULL,\n"
+                + "    trangThaiXacThuc = NULL,\n"
+                + "    hinhAvatar = NULL,\n"
+                + "    isAdmin = NULL\n"
+                + "WHERE maKhachHang = ?; ";
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -237,10 +318,7 @@ public class AdminDAO {
         try {
             conn = JDBCUtil.getConnection();
             stmt = conn.prepareStatement(sql);
-
-            stmt.setString(1, sp.getKichco());
-            stmt.setString(2, sp.getKichco());
-            stmt.setString(3, sp.getMasanpham());
+            stmt.setString(1, kh.getMaKhachHang());
 
             stmt.executeUpdate();
             JDBCUtil.close(conn);
@@ -255,9 +333,10 @@ public class AdminDAO {
 
     public static void main(String[] args) {
         AdminDAO ado = new AdminDAO();
-        List<SanPham> list = ado.selectAllSanPham();
-        for (SanPham sanPham : list) {
-            System.out.println(sanPham.getKichco());
+        List<Categories> list = ado.selectType();
+        for (Categories sp : list) {
+            System.out.println(sp.getCategoryId());
+            System.out.println(sp.getCategoryName());
         }
     }
 

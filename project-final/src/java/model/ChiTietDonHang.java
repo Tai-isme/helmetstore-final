@@ -15,14 +15,29 @@ public class ChiTietDonHang {
     private String maSanPham;
     private String trangThaiDonHang;
     private String phuongThucThanhToan;
-    private String trangThaiThanhToan;
     private String ngayDatHang;
     private String ngayGiaoHangDuKien;
     private String diaChiGiaoHang;
     private int soLuongSanPhamMua;
     private double tienVanChuyen;
     private int vat;
-    private double tongTien;
+    public String magiamgia;
+    private double tongTien;   
+
+    public ChiTietDonHang(String maDonHang, String maSanPham, String trangThaiDonHang, String phuongThucThanhToan, String ngayDatHang, String ngayGiaoHangDuKien, String diaChiGiaoHang, int soLuongSanPhamMua, double tienVanChuyen, int vat, String magiamgia, double tongTien) {
+        this.maDonHang = maDonHang;
+        this.maSanPham = maSanPham;
+        this.trangThaiDonHang = trangThaiDonHang;
+        this.phuongThucThanhToan = phuongThucThanhToan;
+        this.ngayDatHang = ngayDatHang;
+        this.ngayGiaoHangDuKien = ngayGiaoHangDuKien;
+        this.diaChiGiaoHang = diaChiGiaoHang;
+        this.soLuongSanPhamMua = soLuongSanPhamMua;
+        this.tienVanChuyen = tienVanChuyen;
+        this.vat = vat;
+        this.magiamgia = magiamgia;
+        this.tongTien = tongTien;
+    }
 
     public String getMaDonHang() {
         return maDonHang;
@@ -56,13 +71,7 @@ public class ChiTietDonHang {
         this.phuongThucThanhToan = phuongThucThanhToan;
     }
 
-    public String getTrangThaiThanhToan() {
-        return trangThaiThanhToan;
-    }
 
-    public void setTrangThaiThanhToan(String trangThaiThanhToan) {
-        this.trangThaiThanhToan = trangThaiThanhToan;
-    }
 
     public String getNgayDatHang() {
         return ngayDatHang;
@@ -112,6 +121,14 @@ public class ChiTietDonHang {
         this.vat = vat;
     }
 
+    public String getMagiamgia() {
+        return magiamgia;
+    }
+
+    public void setMagiamgia(String magiamgia) {
+        this.magiamgia = magiamgia;
+    }
+
     public double getTongTien() {
         return tongTien;
     }
@@ -120,25 +137,9 @@ public class ChiTietDonHang {
         this.tongTien = tongTien;
     }
 
-    public ChiTietDonHang() {
-    }
+    
 
     
-    
-    public ChiTietDonHang(String maDonHang, String maSanPham, String trangThaiDonHang, String phuongThucThanhToan, String trangThaiThanhToan, String ngayDatHang, String ngayGiaoHangDuKien, String diaChiGiaoHang, int soLuongSanPhamMua, double tienVanChuyen, int vat, double tongTien) {
-        this.maDonHang = maDonHang;
-        this.maSanPham = maSanPham;
-        this.trangThaiDonHang = trangThaiDonHang;
-        this.phuongThucThanhToan = phuongThucThanhToan;
-        this.trangThaiThanhToan = trangThaiThanhToan;
-        this.ngayDatHang = ngayDatHang;
-        this.ngayGiaoHangDuKien = ngayGiaoHangDuKien;
-        this.diaChiGiaoHang = diaChiGiaoHang;
-        this.soLuongSanPhamMua = soLuongSanPhamMua;
-        this.tienVanChuyen = tienVanChuyen;
-        this.vat = vat;
-        this.tongTien = tongTien;
-    }
 
     
 }

@@ -1,10 +1,5 @@
-<%@page import="database.AdminDAO"%>
-<%
-    String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();;
-%>
-<%@page import="model.SanPham_Size"%>
-<%@page import="model.SanPham"%>
-<%@page import="java.util.List"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="url" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}" />
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,17 +13,16 @@
         <title>SB Admin 2 - Tables</title>
 
         <!-- Custom fonts for this template -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
-        <!-- Custom styles for this template -->
-        <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-        <!-- Custom styles for this page -->
-        <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-        <link href="<%= url%>/css/style.css" rel="stylesheet" type="text/css"/>
+        <!-- CSS -->
+        <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link href="${url}/admin/css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="${url}/admin/css/style.css" rel="stylesheet">
     </head>
 
     <body id="page-top">
@@ -59,47 +53,57 @@
                             </button>
                         </div>
 
-                        <form action="<%= url%>/admin" method="POST">
+                        <form action="${url}/admin" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="hanhdong" value="addProduct">
                             <div class="mb-3">
-                                <label for="masanpham" class="form-label">Id</label>
+                                <label for="hinhanhsanpham" class="form-label">Image</label>
+                                <input type="file" name="hinhanhsanpham" class="form-control" id="hinhanhsanphamFile" accept="image/*">
+                                <img id="previewImage" style="width: 100px; border-radius: 10px; display: none;">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="masanpham" class="form-label">Id (*)</label>
                                 <input type="text" name="masanpham" class="form-control" id="masanpham" required>
                             </div>
                             <div class="mb-3">
-                                <label for="tensanpham" class="form-label">Name</label>
+                                <label for="tensanpham" class="form-label">Name (*)</label>
                                 <input type="text" name="tensanpham" class="form-control" id="tensanpham" required>
                             </div>
                             <div class="mb-3">
-                                <label for="hinhanhsanpham" class="form-label">Image</label>
-                                <input type="text" name="hinhanhsanpham" class="form-control" id="hinhanhsanpham" placeholder="URL hình ảnh" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="mausac" class="form-label">Color</label>
+                                <label for="mausac" class="form-label">Color (*)</label>
                                 <input type="text" class="form-control" name="mausac" id="mausac" required>
                             </div>
                             <div class="mb-3">
-                                <label for="kichco" class="form-label">Size</label>
-                                <input type="text" class="form-control" id="kichco" name="kichco" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="soluong" class="form-label">Quantity</label>
+                                <label for="soluong" class="form-label">Quantity (*)</label>
                                 <input type="number" name="soluong" class="form-control" id="soluong" required>
                             </div>
                             <div class="mb-3">
-                                <label for="kieumau" class="form-label">Type</label>
-                                <input type="text" name="kieumau" class="form-control" id="kieumau" required>
+                                <label for="categoryID" class="form-label">Type (*)</label>
+                                <select class="form-select" id="kieumau" name="categoryID" required>
+                                    <c:forEach var="categoryID" items="${spListType}">
+                                        <option value="${categoryID.categoryId}" >${categoryID.categoryName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="size" class="form-label">Size (*)</label>
+                                <select class="form-select" id="size" name="kichco" required>
+                                    <option value="S" selected>S</option>
+                                    <option value="M" >M</option>
+                                    <option value="L">L</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="gianhap" class="form-label">Input price</label>
-                                <input type="number" name="gianhap" class="form-control" id="gianhap" step="0.01" required>
+                                <input type="number" name="gianhap" class="form-control" id="gianhap" step="0.01" >
                             </div>
                             <div class="mb-3">
                                 <label for="giaban" class="form-label">Selling price</label>
-                                <input type="number" name="giaban" class="form-control" id="giaban" step="0.01" required>
+                                <input type="number" name="giaban" class="form-control" id="giaban" step="0.01" >
                             </div>
                             <div class="mb-3">
                                 <label for="giamgia" class="form-label">Discount</label>
-                                <input type="number" name="giamgia" class="form-control" id="giamgia" min="0" max="100" required>
+                                <input type="number" name="giamgia" class="form-control" id="giamgia" min="0" max="100" >
                             </div>
                             <div class="mb-3">
                                 <label for="mota" class="form-label">Description</label>
@@ -145,7 +149,20 @@
 
         <!-- Page level custom scripts -->
         <script src="js/demo/datatables-demo.js"></script>
+        <script>
+            document.getElementById("hinhanhsanphamFile").addEventListener("change", function (event) {
+                let file = event.target.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById("previewImage").src = e.target.result;
+                        document.getElementById("previewImage").style.display = "block";
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
+        </script>
     </body>
 
 </html>

@@ -37,7 +37,8 @@
                     <form class="card-getvalue" action="">
                         <button class="btn btn-primary getValue">Get</button>
                     </form>
-                </div>         
+                </div>
+                
             </div>
 <!--            <div class="card-content">
                 

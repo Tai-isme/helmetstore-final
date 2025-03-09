@@ -1,11 +1,8 @@
-<%@page import="database.AdminDAO"%>
-<%
-    String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();;
-%>
-<%@page import="model.SanPham_Size"%>
-<%@page import="model.SanPham"%>
-<%@page import="java.util.List"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="url" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}" />
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -26,8 +23,8 @@
 
         <!-- CSS -->
         <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-        <link href="<%=url%>/admin/css/sb-admin-2.min.css" rel="stylesheet">
-        <link href="<%=url%>/admin/css/style.css" rel="stylesheet">
+        <link href="${url}/admin/css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="${url}/admin/css/style.css" rel="stylesheet">
     </head>
 
     <body id="page-top">
@@ -57,8 +54,8 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <form action="<%=url%>/admin" method="POST">
-                                    <input type="hidden" name="hanhdong" value="create">
+                                <form action="${url}/admin" method="POST">
+                                    <input type="hidden" name="hanhdong" value="createproduct">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-plus"></i> Add new product
                                     </button>
@@ -71,6 +68,7 @@
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
+                                                <th>Image</th>
                                                 <th>Id</th>
                                                 <th>Name</th>
                                                 <th>Color</th>
@@ -86,6 +84,7 @@
                                         </thead>
                                         <tfoot>
                                             <tr>
+                                                <th>Image</th>
                                                 <th>Id</th>
                                                 <th>Name</th>
                                                 <th>Color</th>
@@ -102,42 +101,41 @@
                                         <tbody>
                                             <%
 
-                                                List<SanPham> listSanPham = (List<SanPham>) request.getAttribute("spList");
-                                                if (listSanPham != null && !listSanPham.isEmpty()) {
-                                                    for (SanPham sanpham : listSanPham) {
-                                            %>
-                                            <tr>
-                                                <td><%= sanpham.getMasanpham()%></td>
-                                                <td><%= sanpham.getTensanpham()%></td>
-                                                <td><%= sanpham.getMausac()%></td>
-                                                <td><%= sanpham.getKieumau()%></td>
-                                                <td><%= sanpham.getKichco()%></td>
-                                                <td><%= sanpham.getSoluong()%></td>
-                                                <td><%= sanpham.getGianhap()%></td>
-                                                <td><%= sanpham.getGiaban()%></td>
-                                                <td><%= sanpham.getGiamgia()%></td>
-                                                <td><%= sanpham.getMota()%></td>
-                                                <td>
-                                                    <div class="d-inline-flex gap-2">
-                                                        <form action="<%=url%>/admin" method="POST" class="d-inline">
-                                                            <input type="hidden" name="hanhdong" value="edit">
-                                                            <input type="hidden" name="masanpham" value="<%= sanpham.getMasanpham()%>">
-                                                            <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
-                                                        </form>
+//                                                List<SanPham> listSanPham = (List<SanPham>) request.getAttribute("spList");
+//                                                if (listSanPham != null && !listSanPham.isEmpty()) {
+//                                                    for (SanPham sanpham : listSanPham) {
+%>
+                                            <c:forEach var="sanpham" items="${requestScope.spList}">
+                                                <tr>
+                                                    <th><img style="width: 30px; height: 30px; border-radius: 50%" src="${pageContext.request.contextPath}/GUI/imgsanpham/${sanpham.hinhanhsanpham}"  alt=""></th>
+                                                    <td>${sanpham.masanpham}</td>
+                                                    <td>${sanpham.tensanpham}</td>
+                                                    <td>${sanpham.mausac}</td>
+                                                    <td>${sanpham.kieumau}</td>
+                                                    <td>${sanpham.kichco}</td>
+                                                    <td>${sanpham.soluong}</td>
+                                                    <td>${sanpham.gianhapformated}</td>
+                                                    <td>${sanpham.giabanformated}</td>
+                                                    <td>${sanpham.giamgia}</td>
+                                                    <td>${sanpham.mota}</td>
+                                                    <td>
+                                                        <div class="d-inline-flex gap-2">
+                                                            <form action="${url}/admin" method="POST" class="d-inline">
+                                                                <input type="hidden" name="hanhdong" value="editsanpham">
+                                                                <input type="hidden" name="masanpham" value="${sanpham.masanpham}">
+                                                                <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+                                                            </form>
 
-                                                        <form action="<%=url%>/admin" method="POST" class="d-inline">
-                                                            <input type="hidden" name="hanhdong" value="delete">
-                                                            <input type="hidden" name="masanpham" value="<%= sanpham.getMasanpham()%>">
-                                                            <input type="hidden" name="size" value="<%= sanpham.getKichco()%>">
-                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <%
-                                                    }
-                                                }
-                                            %>
+                                                            <form action="${url}/admin" method="POST" class="d-inline">
+                                                                <input type="hidden" name="hanhdong" value="delete">
+                                                                <input type="hidden" name="masanpham" value="${sanpham.masanpham}">
+                                                                <input type="hidden" name="size" value="${sanpham.kichco}">
+                                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
@@ -178,5 +176,4 @@
         <script src="js/demo/datatables.js"></script>
 
     </body>
-
 </html>

@@ -16,10 +16,6 @@ public class GioHang {
         this.soluong = soluong;
     }
 
-    public GioHang(int aInt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public String getMakhachhang() {
         return makhachhang;
     }
