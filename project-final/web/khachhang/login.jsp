@@ -86,11 +86,14 @@
                                                 <form action="<%= url%>/khach-hang" method="POST">
                                                     <input class="form-control" name="hanhdong" value="login" type="hidden">
                                                     <div class="row gy-3 overflow-hidden">
-                                                        <c:if test="${not empty error}">
-                                                            <div class="alert alert-${alert}">
-                                                                ${error}
+                                                        <c:if test="${not empty sessionScope.error}">
+                                                            <div class="alert alert-${sessionScope.alert}">
+                                                                ${sessionScope.error}
                                                             </div>
+                                                            <c:remove var="error" scope="session"/>
+                                                            <c:remove var="alert" scope="session"/>
                                                         </c:if>
+
                                                         <div class="col-12">
                                                             <div class="form-floating mb-3">
                                                                 <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="${username}" >

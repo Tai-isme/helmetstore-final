@@ -184,7 +184,7 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             Connection c = JDBCUtil.getConnection();
 
             // B2: Tạo câu SQL
-            String sql = "UPDATE khachhang SET tendangnhap=?, matkhau=?, hovaten=?, gioitinh=?, ngaysinh=?, sodienthoai=?, email=?, quoctich=?, diachikhachhang=?, diachinhanhang=?, isAdmin=? "
+            String sql = "UPDATE khachhang SET tendangnhap=?, matkhau=?, hovaten=?, gioitinh=?, ngaysinh=?, sodienthoai=?, email=?, quoctich=?, diachikhachhang=?, diachinhanhang=?, hinhavatar=?, isAdmin=? "
                     + " WHERE makhachhang=?";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, t.getTenDangNhap());
@@ -197,9 +197,10 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             ps.setString(8, t.getQuocTich());
             ps.setString(9, t.getDiaChiKhachHang());
             ps.setString(10, t.getDiaChiNhanHang());
-            ps.setInt(11, t.getIsAdmin());
+            ps.setString(11, t.getHinhAvatar());
+            ps.setInt(12, t.getIsAdmin());
 
-            ps.setString(12, t.getMaKhachHang());
+            ps.setString(13, t.getMaKhachHang());
 
             System.out.println(ps);
             // B3: Chạy câu lệnh SQL
@@ -409,4 +410,22 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             System.out.println("Thêm khách hàng thất bại!");
         }
     }
+
+    public boolean isUsernameExists(String tenDangNhap) {
+        boolean exists = false;
+        String sql = "SELECT COUNT(*) FROM KhachHang WHERE tenDangNhap = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tenDangNhap);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
 }

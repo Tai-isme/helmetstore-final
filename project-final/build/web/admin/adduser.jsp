@@ -50,22 +50,21 @@
                     <div class="container">
                         <div class="form-container">
                             <h3 class="text-center mb-4">Add User </h3>
-                            <form action="${url}/admin" method="POST">
+                            <form action="${url}/admin" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="hanhdong" value="adduser">
-                                <!-- ID (readonly) -->
-<!--                                <div class="mb-3">
-                                    <label for="Avatar" class="form-label">Avatar</label>
-                                    <img style="width: 100px; border-radius: 50%" src="${pageContext.request.contextPath}/uploads/${khachhang.hinhAvatar}"  alt="">
-                                </div>-->
-                                <!-- Name -->
                                 <div class="mb-3">
-                                    <label for="tenDangNhap" class="form-label">Username</label>
+                                    <label for="hinhavatar" class="form-label">Avatar</label>
+                                    <input type="file" name="hinhavatar" class="form-control" id="hinhavatarFile" accept="image/*">
+                                    <img id="previewImage" style="width: 100px; border-radius: 10px; display: none;">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tenDangNhap" class="form-label">Username (*)</label>
                                     <input type="text" class="form-control" id="productName" name="tenDangNhap" value="" required>
                                 </div>
 
                                 <!-- Color -->
                                 <div class="mb-3">
-                                    <label for="matKhau" class="form-label">Password</label>
+                                    <label for="matKhau" class="form-label">Password (*)</label>
                                     <input type="text" class="form-control" id="color" name="matKhau" value="" required>
                                 </div>
 
@@ -122,7 +121,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="isAdmin" class="form-label">isAdmin</label>
-                                    <input type="number" class="form-control" id="description" name="isAdmin" rows="3" >
+                                    <input type="number" class="form-control" id="description" name="isAdmin" rows="3"  value="0">
                                 </div>
                                 <!-- Buttons -->
                                 <div class="d-flex justify-content-end gap-2">

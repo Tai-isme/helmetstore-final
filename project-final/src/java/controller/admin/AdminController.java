@@ -22,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import model.Categories;
 import model.KhachHang;
@@ -180,6 +181,62 @@ public class AdminController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin?hanhdong=load");
     }
 
+    protected void addhinhavatar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("Da vao add hinh anh");
+        String folerName = "uploads";
+
+        // Lấy đường dẫn thực của thư mục upload trên server
+        String uploadPath = getServletContext().getRealPath("");
+        uploadPath = uploadPath.substring(0, uploadPath.length() - 10);
+        uploadPath = uploadPath + "web" + File.separator + folerName + File.separator;;
+
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir(); // Tạo folder nếu chưa có
+        }
+        //Lấy file từ request
+        Part filePart = request.getPart("hinhavatar");
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+        String error = "";
+        // Kiểm tra file hợp lệ
+        if (fileName == null || fileName.isEmpty()) {
+            if (fileName.length() < 5) {
+                error += "File không hợp lệ";
+            }
+            return;
+        }
+        // Kiểm tra xem có đúng là file ảnh hay không
+        if (fileName.lastIndexOf(".jpg") > 0 || fileName.lastIndexOf(".jpeg") > 0 || fileName.lastIndexOf(".png") > 0) {
+
+//            HttpSession session = request.getSession(false);
+            Object obj = request.getAttribute("khachHang");
+            KhachHang khachhang = null;
+            if (obj != null) {
+                khachhang = (KhachHang) obj;
+            }
+
+            //Đổi lại tên file bằng tên của tên san pham để tránh bị trùng
+            int dotLaster = fileName.lastIndexOf(".");
+            fileName = khachhang.getTenDangNhap() + fileName.substring(dotLaster);
+
+            // Lưu file vào thư mục uploads
+            String filePath = uploadPath + fileName;
+            System.out.println("Lưu thành công" + filePath);
+            filePart.write(filePath);
+
+            // Lưu tên file xuống CSDL
+            khachhang.setHinhAvatar(fileName);
+            KhachHangDAO khdao = new KhachHangDAO();
+            if (khdao.updateAvatar(khachhang) > 0) {
+                System.out.println("Lưu tên file xuống CSDL thành công");
+                error = "Đã cập nhật Avatar thành công";
+            }
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin?hanhdong=user");
+    }
+
     private String uploadNewImage(HttpServletRequest request, String oldImage) throws ServletException, IOException {
         Part filePart = request.getPart("hinhanhsanpham");
 
@@ -192,6 +249,43 @@ public class AdminController extends HttpServlet {
 
         if (uploadPath == null) {
             uploadPath = "C:\\path\\to\\your\\project" + folderName; // Cập nhật theo đường dẫn thực tế
+        }
+
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+        // Kiểm tra file hợp lệ (chỉ chấp nhận ảnh)
+        if (!fileName.matches(".*\\.(jpg|jpeg|png)$")) {
+            return oldImage;
+        }
+
+        // Đổi tên file theo thời gian để tránh trùng
+        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+        fileName = "product_" + System.currentTimeMillis() + fileExtension;
+
+        // Lưu file vào thư mục uploads
+        String filePath = uploadPath + File.separator + fileName;
+        filePart.write(filePath);
+
+        return fileName; // Trả về tên file mới
+    }
+
+    private String uploadNewImageAvatar(HttpServletRequest request, String oldImage) throws ServletException, IOException {
+        Part filePart = request.getPart("hinhavatar");
+
+        if (filePart == null || filePart.getSize() <= 0) {
+            return oldImage; // Không có ảnh mới -> giữ nguyên ảnh cũ
+        }
+
+        String folderName = "uploads";
+        String uploadPath = getServletContext().getRealPath("/") + folderName;
+
+        if (uploadPath == null) {
+             uploadPath = "C:\\path\\to\\your\\project\\uploads"; 
         }
 
         File uploadDir = new File(uploadPath);
@@ -457,13 +551,18 @@ public class AdminController extends HttpServlet {
         String hoVaTen = request.getParameter("hoVaTen");
         String gioiTinh = request.getParameter("gioiTinh");
         String ngaySinhStr = request.getParameter("ngaySinh");
+        String oldImage = request.getParameter("oldImage"); // Lấy ảnh cũ từ form
         java.sql.Date ngaySinh = null;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date utilDate = sdf.parse(ngaySinhStr);
-            ngaySinh = new java.sql.Date(utilDate.getTime());
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+
+        if (ngaySinhStr != null && !ngaySinhStr.trim().isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                sdf.setLenient(false);
+                java.util.Date utilDate = sdf.parse(ngaySinhStr);
+                ngaySinh = new java.sql.Date(utilDate.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         String soDienThoai = request.getParameter("soDienThoai");
@@ -479,7 +578,10 @@ public class AdminController extends HttpServlet {
             e.printStackTrace();
         }
         try {
-            KhachHang khachHang = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh, soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, hoVaTen, isAdmin);
+            // Gọi hàm upload ảnh mới, nếu không có ảnh mới sẽ giữ ảnh cũ
+            String hinhavatar = uploadNewImageAvatar(request, oldImage);
+            
+            KhachHang khachHang = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh, soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, hinhavatar, isAdmin);
             KhachHangDAO khdao = new KhachHangDAO();
             if (khdao.update(khachHang) == 1) {
                 request.setAttribute("khachHang", khachHang);
@@ -502,13 +604,14 @@ public class AdminController extends HttpServlet {
         }
     }
 
-    private void adduser(HttpServletRequest request, HttpServletResponse response) {
+    private void adduser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Random rd = new Random();
         String maKhachHang = System.currentTimeMillis() + rd.nextInt(1000) + "";
         String tenDangNhap = request.getParameter("tenDangNhap");
         String matKhau = request.getParameter("matKhau");
         String hoVaTen = request.getParameter("hoVaTen");
         String gioiTinh = request.getParameter("gioiTinh");
+        String hinhavatar = request.getParameter("hinhavatar");
 
         String ngaySinhStr = request.getParameter("ngaySinh"); // Lấy dữ liệu từ form
         java.sql.Date ngaySinh = null; // Khởi tạo giá trị mặc định
@@ -521,8 +624,6 @@ public class AdminController extends HttpServlet {
             } catch (ParseException e) {
                 System.out.println("Lỗi: Định dạng ngày tháng không hợp lệ.");
             }
-        } else {
-            System.out.println("Lỗi: Trường ngày tháng đang rỗng.");
         }
 
         String soDienThoai = request.getParameter("soDienThoai");
@@ -532,35 +633,18 @@ public class AdminController extends HttpServlet {
         String diaChiNhanHang = request.getParameter("diaChiNhanHang");
         String isAdminStr = request.getParameter("isAdmin");
         // Kiểm tra giá trị null trước khi tạo đối tượng KhachHang
-        if (maKhachHang == null) {
-            maKhachHang = "";
+        if (tenDangNhap == null || tenDangNhap.trim().isEmpty()
+                || matKhau == null || matKhau.trim().isEmpty()) {
+            System.out.println("ten dang nhap == null || mat khau == null");
+            response.sendRedirect(request.getContextPath() + "/admin?hanhdong=createuser");
+            return;
         }
-        if (tenDangNhap == null) {
-            tenDangNhap = "";
-        }
-        if (matKhau == null) {
-            matKhau = "";
-        }
-        if (hoVaTen == null) {
-            hoVaTen = "";
-        }
-        if (gioiTinh == null) {
-            gioiTinh = "";
-        }
-        if (soDienThoai == null) {
-            soDienThoai = "";
-        }
-        if (email == null) {
-            email = "";
-        }
-        if (quocTich == null) {
-            quocTich = "";
-        }
-        if (diaChiKhachHang == null) {
-            diaChiKhachHang = "";
-        }
-        if (diaChiNhanHang == null) {
-            diaChiNhanHang = "";
+
+        KhachHangDAO khdao = new KhachHangDAO();
+        if (khdao.isUsernameExists(tenDangNhap)) {
+            System.out.println("ten dang nhap da ton tai");
+            response.sendRedirect(request.getContextPath() + "/admin?hanhdong=createuser");
+            return;
         }
 
         int isAdmin = 0;
@@ -568,14 +652,15 @@ public class AdminController extends HttpServlet {
             try {
                 isAdmin = Integer.parseInt(isAdminStr);
             } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
         try {
             KhachHang khachHang = new KhachHang(maKhachHang, tenDangNhap, matKhau, hoVaTen, gioiTinh, ngaySinh, soDienThoai, email, quocTich, diaChiKhachHang, diaChiNhanHang, hoVaTen, isAdmin);
-            KhachHangDAO khdao = new KhachHangDAO();
             if (khdao.insert(khachHang) == 1) {
                 request.setAttribute("khachHang", khachHang);
+                addhinhavatar(request, response);
             }
             response.sendRedirect("/project-final/admin?hanhdong=user");
         } catch (Exception e) {

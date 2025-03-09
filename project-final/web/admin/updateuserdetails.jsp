@@ -50,12 +50,22 @@
                     <div class="container">
                         <div class="form-container">
                             <h3 class="text-center mb-4">Update User Details</h3>
-                            <form action="${url}/admin" method="POST">
+                            <form action="${url}/admin" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="hanhdong" value="updateuser">
                                 <!-- ID (readonly) -->
+                                <!-- hien thi hinh anh cu-->
                                 <div class="mb-3">
-                                    <label for="Avatar" class="form-label">Avatar</label>
-                                    <img style="width: 100px; border-radius: 50%" src="${pageContext.request.contextPath}/uploads/${khachhang.hinhAvatar}"  alt="">
+                                    <label for="curentimg" class="form-label">Avatar</label>
+                                    <img id="currentImage" style="width: 100px; border-radius: 50%" src="${pageContext.request.contextPath}/uploads/${khachhang.hinhAvatar}"  alt="curentimg">
+                                    <input type="hidden" name="oldImage" value="${khachhang.hinhAvatar}">
+                                </div>
+                                <!-- anh xem truoc -->
+                                <img id="previewImage" style="width: 100px; border-radius: 10px; display: none;">
+
+                                <!-- update hinh moi -->
+                                <div class="mb-3">
+                                    <label for="hinhavatarFile" class="form-label">Upload New Image</label>
+                                    <input type="file" name="hinhavatar" class="form-control" id="hinhavatarFile" accept="image/*">
                                 </div>
                                 <div class="mb-3">
                                     <label for="maKhachHang" class="form-label">User Id</label>
@@ -80,17 +90,17 @@
                                     <input type="text" class="form-control" id="type" name="hoVaTen" value="${khachhang.hoVaTen}" >
                                 </div>
 
-                                <!-- Size -->
+                                <!-- Gender Selection -->
                                 <div class="mb-3">
                                     <label for="gioiTinh" class="form-label">Gender</label>
-                                    <select class="form-select" id="size" name="gioiTinh" >
-                                        <option value="${khachhang.gioiTinh}"></option>
-                                        <option value="Male" selected>Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-
+                                    <select class="form-select" id="gioiTinh" name="gioiTinh">
+                                        <option value="" disabled>-- Select Gender --</option>
+                                        <option value="Male" ${khachhang.gioiTinh == 'Male' ? 'selected' : ''}>Male</option>
+                                        <option value="Female" ${khachhang.gioiTinh == 'Female' ? 'selected' : ''}>Female</option>
+                                        <option value="Other" ${khachhang.gioiTinh == 'Other' ? 'selected' : ''}>Other</option>
                                     </select>
                                 </div>
+
 
                                 <!-- Quantity -->
                                 <div class="mb-3">
@@ -175,7 +185,26 @@
 
         <!-- Page level custom scripts -->
         <script src="js/demo/datatables-demo.js"></script>
+        <script>
+            document.getElementById("hinhavatarFile").addEventListener("change", function (event) {
+                let file = event.target.files[0];
+                let previewImage = document.getElementById("previewImage");
+                let currentImage = document.getElementById("currentImage");
 
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = "block";
+                        currentImage.style.display = "none";
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewImage.style.display = "none";
+                    currentImage.style.display = "block"; // Hiển thị lại ảnh cũ nếu không chọn ảnh mới
+                }
+            });
+        </script>
     </body>
 
 </html>
